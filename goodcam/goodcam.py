@@ -50,12 +50,6 @@ class Stream:
         
 
 
-
-img  = cv2.imread('/home/parallels/Desktop/test.png', cv2.WINDOW_OPENGL)
-cv2.imshow('w', img)
-cv2.waitKey(0)
-exit(0)
-        
 stream = Stream(0)
 stream.start(10)
 
