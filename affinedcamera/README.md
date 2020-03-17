@@ -4,7 +4,7 @@ If everything goes well, you will see a "calibration" window. On this window you
 
 the points will be considered as Top Left, Top Right, and Bottom Left respectively.
 
-the `fastcam.py` is the same script which you can find outside of thid directory. It's been used for (possibly) a better experience. 
+the `fastcam.py` is the same script which you can find outside of this directory. It's been used for (possibly) a better experience. 
 
 Don't forget to smile in the first window; you might not get the chance on the second one.
 
