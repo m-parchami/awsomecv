@@ -25,7 +25,7 @@ class Stream:
         while True:
             
             if self.release:
-                return
+                break
             
             if self.frame_queue.full():
                 print('missed a frame because queue is full!')
@@ -35,11 +35,12 @@ class Stream:
         
             if not ok:
                 print('no more frames from source!')
-                self.end()
+                self.stop()
                 
             self.frame_queue.put(frame)
             self.current_size += 1
 
+        exit(0)
     def read(self):
         self.current_size -= 1
         return self.frame_queue.get()
