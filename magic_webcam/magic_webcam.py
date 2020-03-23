@@ -8,7 +8,7 @@ from fastcam import Stream
 
 #choose your input source
 camera = '/dev/video0'
-
+queue_length = 5
 
 parser = argparse.ArgumentParser(description = 'magic webcam ;) ')
 parser.add_argument('--pipe',dest = 'pipe',help = 'write the results in stdout: on|off (default: off)', choices = ['on','off'], default = 'off')
@@ -54,9 +54,8 @@ warp_mat = cv2.getAffineTransform(srcTri, dstTri)
 
 
 stream = Stream(camera)
-stream.start(5)
-#print('ddddddddddddddddddddddddddddddddddddddddd ' + str(pipe))
-#pipe = True
+stream.start(queue_length)
+
 while True:
 
     #ok, frame = cap.read()
