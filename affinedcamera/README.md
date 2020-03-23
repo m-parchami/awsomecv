@@ -38,7 +38,9 @@ Now that we got everything set, the only thing left is to pipe the output to the
 
 So the command will be:
 ```
-python magic_cam.py --pipe on| ffmpeg -f rawvideo -pixel_format bgr24 -video_size 1280x720 -framerate 30 -i - -vcodec rawvideo -pix_fmt yuv420p -threads 0 -f v4l2 -vf 'scale=1280:720' /dev/video1
+python3 magic_webcam.py --pipe on| ffmpeg -f rawvideo -pixel_format rgb24 -video_size 1280x720 -framerate 30 -i - -vcodec rawvideo -pix_fmt yuv420p -threads 0 -f v4l2 -vf 'scale=1280:720' -pixel_format rgb24 /dev/video1
+
+
 ```
 
 

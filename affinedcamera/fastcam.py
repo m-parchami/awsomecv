@@ -1,6 +1,11 @@
 import cv2
-import queue
+import sys
 from threading import Thread
+if sys.version_info.major == 3:
+    import queue
+else:
+    import Queue as queue
+    
 class Stream:
 
     def __init__(self, source = 0):
@@ -40,6 +45,7 @@ class Stream:
             self.frame_queue.put(frame)
             self.current_size += 1
 
+        self.cap.release()
         exit(0)
     def read(self):
         self.current_size -= 1
