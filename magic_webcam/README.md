@@ -15,7 +15,8 @@ These instructions will work on Linux. Of course you can still use the basic fea
 
 First of all, we need a video device. Almost all of the applications using your webcam, will automatically search your computer's video devices and provide you a list of cameras to use. Therefore, we will create a new one to let it be useable in such applications.
 
-To do so, we will use [v4l2loopback](https://github.com/umlaeute/v4l2loopback). There's a great detailed guide on their README to help you install their module. I also took hints from the first answer on this [question](https://unix.stackexchange.com/questions/528400/how-can-i-stream-my-desktop-screen-to-dev-video1-as-a-fake-webcam-on-linux?answertab=active#tab-top)
+To do so, we will use [v4l2loopback](https://github.com/umlaeute/v4l2loopback). There's a great detailed guide on their README to help you install their module. I also took hints from the first answer on this [question](https://unix.stackexchange.com/questions/528400/how-can-i-stream-my-desktop-screen-to-dev-video1-as-a-fake-webcam-on-linux?answertab=active#tab-top). Make sure you install this module somewhere accessible enough!
+
 Here are the commands I used: 
 ```
 git clone https://github.com/umlaeute/v4l2loopback/
@@ -25,7 +26,7 @@ sudo make install
 sudo depmod -a
 ```
 # Step 2
-Now that the module is set, we must create our new video device. Keep in mind that you should run the following commands everytime you re-boot your linux from the installation directory `[Some path]/v4l2loopback`
+Now that the module is set, we must create our new video device. Keep in mind that you should run the following commands everytime you re-boot your linux from the installation directory `[Your installation path]/v4l2loopback`
 ```
 sudo modprobe videodev
 sudo insmod ./v4l2loopback.ko devices=1 video_nr=1 exclusive_caps=1
@@ -51,6 +52,6 @@ python magic_webcam.py --pipe on| ffmpeg -f rawvideo -pixel_format rgb24 -video_
 ```
 Don't forget to change the scale configuration based on your situation
 
-The `fastcam.py` is the same script which you can find outside of this directory named 'goodcam.py'. It's been used for better fps and lower delay. To be short, it uses a separate thread for reading the frames from the video source.
+The `fastcam.py` is the same script which you can find outside of this directory named `goodcam.py`. It's been used for better fps and lower delay. To be short, it uses a separate thread for reading the frames from the video source.
 
 cheers.
