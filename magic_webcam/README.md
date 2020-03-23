@@ -1,4 +1,4 @@
-The `magic_webcam.py` can be used for presenting a paper on your desk or a close-enough whiteboard. Beside the packages mentioned in the following, you also need to have **OpenCV** installed. You can use this [guide](https://www.learnopencv.com/install-opencv3-on-ubuntu/).
+The `magic_webcam.py` can be used for presenting a paper on your desk or a close-enough whiteboard. Besides the packages mentioned in the following, you also need to have **OpenCV** installed. You can use this [guide](https://www.learnopencv.com/install-opencv3-on-ubuntu/).
 
 Run the code using:
 ```
@@ -6,10 +6,10 @@ python magic_cam.py
 ```
 As long as you have OpenCV installed, the python version doesn't matter.
 
-After running the script, if everything goes well, you will see a "calibration" window. On this window you must specify 3 points using your left mouse button. These points will be used for an affine transform. The selected cordinates will become **Top Left**, **Top Right**, and **Bottom Left** respectively.
+After running the script, if everything goes well, you will see a "calibration" window. On this window, you must specify 3 points using your left mouse button. These points will be used for an affine transform. The selected coordinates will become **Top Left**, **Top Right**, and **Bottom Left** respectively.
 
-As you can see, the output of this code can be viewed as an OpenCV window. Unfortunately, that's not always the case! You may also want to share the output in an online platform such as Skype(or any other application which uses your webcam). Of course you can always use the "screen sharing" feature provided by the platform itself, however,  it would take too much unnecessary bandwidth and also, lower your computer's performance during the presentation. In the following I will provide you a fairly simple way to stream this output(transformed images) as a fake webcam.
-These instructions will work on Linux. Of course you can still use the basic feature(affine transform resulting in a window) on any operating system having `python` and `OpenCV` installed. 
+As you can see, the output of this code can be viewed as an OpenCV window. Unfortunately, that's not always the case! You may also want to share the output in an online platform such as Skype(or any other application which uses your webcam). Of course, you can always use the "screen sharing" feature provided by the platform itself, however,  it would take too much unnecessary bandwidth and also, lower your computer's performance during the presentation. In the following, I will provide you a fairly simple way to stream this output(transformed images) as a fake webcam.
+These instructions will work on Linux. Of course, you can still use the basic feature(affine transform resulting in a window) on any operating system having `python` and `OpenCV` installed. 
 
 # Step 1
 
@@ -26,7 +26,7 @@ sudo make install
 sudo depmod -a
 ```
 # Step 2
-Now that the module is set, we must create our new video device. Keep in mind that you should run the following commands everytime you re-boot your linux from the installation directory `[Your installation path]/v4l2loopback`
+Now that the module is set, we must create our new video device. Keep in mind that you should run the following commands every time you reboot your Linux from the installation directory `[Your installation path]/v4l2loopback`
 ```
 sudo modprobe videodev
 sudo insmod ./v4l2loopback.ko devices=1 video_nr=1 exclusive_caps=1
@@ -37,7 +37,7 @@ ls -al /dev/video*
 v4l2-ctl --list-devices
 ```
 # Step 3
-Now we have our device, you may already be able to see it in the list of available webcams in different applications. But the problem is that it's not currently streaming any data. So let's fix it. instead of showing each processed frame using `imshow()`, we will pipe the data to an **ffmpeg** command. The command will stream the frames into the new created video device.
+Now we have our device, you may already be able to see it in the list of available webcams in different applications. But the problem is that it's not currently streaming any data. So let's fix it. instead of showing each processed frame using `imshow()`, we will pipe the data to an **ffmpeg** command. The command will stream the frames into the newly created video device.
 
 To install ffmpeg:
 ```
