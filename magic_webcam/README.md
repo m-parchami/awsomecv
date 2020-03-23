@@ -25,7 +25,7 @@ sudo make install
 sudo depmod -a
 ```
 # Step 2
-Now that we got everything set, we must create our new video device. Keep in mind that you should run the following commands everytime you re-boot your linux from the installation directory `[Some path]/v4l2loopback`
+Now that the module is set, we must create our new video device. Keep in mind that you should run the following commands everytime you re-boot your linux from the installation directory `[Some path]/v4l2loopback`
 ```
 sudo modprobe videodev
 sudo insmod ./v4l2loopback.ko devices=1 video_nr=1 exclusive_caps=1
@@ -43,12 +43,14 @@ To install ffmpeg:
 sudo apt install ffmpeg
 ```
 
-Now that we got everything set, the only thing left is to pipe the output to the right ffmpeg command. To enable piping on `magic_cam.py` we will use the `--pipe on` option.
+Now that we got everything set, the only thing left is to pipe the output to the right ffmpeg command. To enable piping on `magic_cam.py`, we will use the `--pipe on` option.
 
 So the command will be:
 ```
 python magic_webcam.py --pipe on| ffmpeg -f rawvideo -pixel_format rgb24 -video_size 1280x720 -framerate 30 -i - -vcodec rawvideo -pix_fmt yuv420p -threads 0 -f v4l2 -vf 'scale=1280:720' -pixel_format rgb24 /dev/video1
 ```
+Don't forget to change the scale configuration based on your situation
+
 The `fastcam.py` is the same script which you can find outside of this directory named 'goodcam.py'. It's been used for better fps and lower delay. To be short, it uses a separate thread for reading the frames from the video source.
 
 cheers.
