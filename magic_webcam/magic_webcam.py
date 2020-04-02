@@ -2,6 +2,7 @@ import cv2
 import sys
 import numpy as np
 import argparse
+import math
 from fastcam import Stream
 
 
@@ -17,14 +18,14 @@ pipe = (args.pipe == 'on')
 
 cap = cv2.VideoCapture(camera)
 width  = cap.get(cv2.CAP_PROP_FRAME_WIDTH)  # float
-height = cap.get(cv2.CAP_PROP_FRAME_HEIGHT) # floa
+height = cap.get(cv2.CAP_PROP_FRAME_HEIGHT) # float
 points = []
 
 def click(event, x, y, flags, param):
 
     
     if event == cv2.EVENT_LBUTTONDOWN:
-        if len(points) == 3:
+        if len(points) == 4:
             print('You have defined enough points!')
         else:
             points.append((x,y))
@@ -43,29 +44,62 @@ while True:
     key = cv2.waitKey(1)
     if key & 0xFF == ord('q'):
         break
-    if len(points) == 3:
+    if len(points) == 4:
         break
 cv2.destroyAllWindows()
 cap.release()
 
 srcTri = np.array(points ).astype(np.float32)
-dstTri = np.array( [[0,0],[width,0], [0,height]] ).astype(np.float32)
-warp_mat = cv2.getAffineTransform(srcTri, dstTri)
-
+#dstTri = np.array( [[0,0],[width,0], [0,height]] ).astype(np.float32)
+dstTri = np.array( [[0,0],[1050,0], [0,1500], [1050, 1500]]).astype(np.float32)
+#warp_mat = cv2.getAffineTransform(srcTri, dstTri)
+warp_mat = cv2.getPerspectiveTransform(srcTri, dstTri)
 
 stream = Stream(camera)
 stream.start(queue_length)
+'''
+w_scale = 300
+h_scale = 400
 
+new_w = cv2.transform(points[1], warp_mat)[1] - cv2.transform(points[0], warp_mat)[1]
+new_h = cv2.transform(points[2], warp_mat)[0] - cv2.transform(points[0], warp_mat)[0]
+'''
+mode = None
+display_help = True
+
+bilateral_size = 5
+bilateral_sigma_color = 0.1
+bilateral_sigma_space = 20
 while True:
 
-    #ok, frame = cap.read()
+    
     frame = stream.read()
-    frame = cv2.cvtColor(frame,cv2.COLOR_BGR2RGB)
+    
     if not ok:
         break
-    frame = cv2.warpAffine(frame,warp_mat, ( int(width) , int(height)))
+    """
+    frame = cv2.warpAffine(frame,warp_mat, (int(w_scale * math.sqrt(( (points[0][0] - points[1][0]) **2 + (points[0][1] - points[1][1])**2 ))) ,
+                           int(h_scale *math.sqrt(( (points[0][0] - points[2][0]) **2 + (points[0][1] - points[2][1])**2 )))) )
+    """
+
+    #frame = cv2.warpAffine(frame, warp_mat, (1050, 1500))
+    frame = cv2.warpPerspective(frame, warp_mat, (1050, 1050))
     
+    '''
+    for i, row in enumerate(frame):
+        for j, cell in enumerate(row):
+            if frame [i][j][0] > frame[i][j][1] and frame[i][j][0] > frame[i][j][2]:
+                frame[i][j][:] = [255, 0 , 0]
+            else:
+                frame[i][j][0] = 0
+    '''
+    #frame= cv2.Canny(frame, 40, 200)
+    frame[:][:][1:3] = cv2.GaussianBlur(frame[:][:][1:3], (13, 13), 0)
+    #frame = cv2.bilateralFilter(frame,bilateral_size, bilateral_sigma_color, bilateral_sigma_space)
+    if display_help:
+        frame = cv2.putText(frame, 'This is help message', (50,50), cv2.FONT_HERSHEY_SIMPLEX,  1, (0,0,255), 2, cv2.LINE_AA)
     if pipe:
+        frame = cv2.cvtColor(frame,cv2.COLOR_BGR2RGB)
         if sys.version_info.major == 3:
             sys.stdout.buffer.write(frame.tostring())
         else:
@@ -75,12 +109,27 @@ while True:
     key = cv2.waitKey(1)
     if key & 0xFF == ord('q'):
         break
-
+    
+    if key & 0xFF == ord('i'):
+        display_help = ~display_help
+    if key & 0xFF == ord('w'):
+        mode = 'width'      
+    if key & 0xFF == ord('h'):
+        mode = 'height'
+        
+    if mode == 'width':
+        if key & 0xFF == ord('+'):
+            w_scale += 1
+        elif  key & 0xFF == ord('-'):
+            w_scale -= 1
+            
+    if mode == 'height':
+        if key & 0xFF == ord('+'):
+            h_scale += 1
+        elif  key & 0xFF == ord('-'):
+            h_scale -= 1
+        
 stream.stop()
 
 
-"""
-python2 pipetest.py | ffmpeg -f rawvideo -pixel_format bgr24 -video_size 1280x720erate 30 -i - -vcodec rawvideo -pix_fmt yuv420p -threads 0 -f v4l2 -vf 'scale=1280:720' -pixel_format rgb24 /dev/video1
 
-
-"""
