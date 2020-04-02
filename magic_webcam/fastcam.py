@@ -33,7 +33,7 @@ class Stream:
                 break
             
             if self.frame_queue.full():
-                print('missed a frame because queue is full!')
+                #print('missed a frame because queue is full!')
                 continue
             
             ok, frame = self.cap.read()
