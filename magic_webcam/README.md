@@ -6,10 +6,10 @@ python magic_cam.py
 ```
 As long as you have OpenCV installed, the python version doesn't matter.
 
-After running the script, if everything goes well, you will see a "calibration" window. On this window, you must specify 4 points using your left mouse button. These points will be used for a perspective transformation. The selected coordinates will become **Top Left**, **Top Right**, and **Bottom Left** respectively.
+After running the script, if everything goes well, you will see a "calibration" window. On this window, you must specify 4 points using your left mouse button. These points will be used for a perspective transformation. The selected coordinates will become **Top Left**, **Top Right**, and **Bottom Left** and **Bottom Right** respectively.
 
 As you can see, the output of this code can be viewed in an OpenCV window. Unfortunately, that's not always the case! You may also want to share the output in an online platform such as Skype(or any other application which uses your webcam). Of course, you can always use the "screen sharing" feature provided by the platform itself, however,  it would take too much unnecessary bandwidth and also, lower your computer's performance during the presentation. In the following, I will provide you a fairly simple way to stream this output(transformed images) as a fake webcam.
-These instructions will work on Linux. Of course, you can still use the basic feature(perspective transformation resulting in a window) on any operating system having `python` and `OpenCV` installed. 
+These instructions will work on Linux. Of course, you can still use the basic functionality(perspective transformation resulting in a window) on any operating system having `python` and `OpenCV` installed. 
 
 # Step 1
 
